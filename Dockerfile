@@ -49,7 +49,7 @@ start)
   echo 'start command invoked'
 
   # Try to update the stack
-  UPDATE_OUTPUT=$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
+  UPDATE_OUTPUT=$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
 
   # Check if the update failed because the stack does not exist
   if echo \$UPDATE_OUTPUT | grep -q "ValidationError"; then
