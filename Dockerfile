@@ -34,7 +34,7 @@ fi
 if [ "\$JOB_INPUT" != '' ]
 then
   echo "\$JOB_INPUT" > input.json
-  PARAMETERS="file://./input.json"
+  PARAMETERS="file:///data/input.json"
 fi
 
 CMD=\$1; shift

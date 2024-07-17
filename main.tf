@@ -17,6 +17,7 @@ resource "qovery_job" "my_job" {
   memory               = 256
   max_duration_seconds = 300
   max_nb_restart       = 1
+  auto_deploy          = true
   source = {
     docker = {
       git_repository = {
@@ -91,9 +92,9 @@ resource "qovery_job" "my_job" {
       key = "JOB_INPUT"
       value = templatefile("./cloudformation/input.json.tmpl", {
         qovery_environment_id = var.qovery_environment_id
-        master_username = var.MASTER_USERNAME
-        master_password = var.MASTER_PASSWORD
-        database_name = var.DATABASE_NAME
+        master_username       = var.MASTER_USERNAME
+        master_password       = var.MASTER_PASSWORD
+        database_name         = var.DATABASE_NAME
       })
     }
   ]
