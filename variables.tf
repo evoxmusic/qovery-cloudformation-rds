@@ -33,3 +33,18 @@ variable "AWS_DEFAULT_REGION" {
   type        = string
   default     = "us-east-2"
 }
+
+variable "MASTER_USERNAME" {
+    description = "Master username for the database"
+    type        = string
+}
+
+variable "MASTER_PASSWORD" {
+    description = "Master password for the database"
+    type        = string
+}
+
+variable "DATABASE_NAME" {
+    description = "Database name"
+    type        = string
+}

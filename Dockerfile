@@ -30,6 +30,13 @@ then
   PARAMETERS="file://\$JOB_INPUT"
 fi
 
+# if job input is a JSON and is not empty, then we can save it into a file input.json
+if [ "\$JOB_INPUT" != '' ]
+then
+  echo "\$JOB_INPUT" > input.json
+  PARAMETERS="file://./input.json"
+fi
+
 CMD=\$1; shift
 set -ex
 

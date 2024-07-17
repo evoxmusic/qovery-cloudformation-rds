@@ -76,12 +76,25 @@ resource "qovery_job" "my_job" {
     {
       key   = "AWS_DEFAULT_REGION"
       value = var.AWS_DEFAULT_REGION
+    },
+    {
+      key   = "CF_TEMPLATE_NAME"
+      value = "cloudformation/main.yaml"
     }
   ]
   secrets = [
     {
       key   = "AWS_SECRET_ACCESS_KEY"
       value = var.AWS_SECRET_ACCESS_KEY
+    },
+    {
+      key = "JOB_INPUT"
+      value = templatefile("./cloudformation/input.json.tmpl", {
+        qovery_environment_id = var.qovery_environment_id
+        master_username = var.MASTER_USERNAME
+        master_password = var.MASTER_PASSWORD
+        database_name = var.DATABASE_NAME
+      })
     }
   ]
 }

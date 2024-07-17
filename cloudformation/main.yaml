@@ -15,7 +15,7 @@ Parameters:
     NoEcho: true
     AllowedPattern: "[a-zA-Z0-9]*"
     ConstraintDescription: must contain only alphanumeric characters.
-  DBName:
+  DatabaseName:
     Type: String
     Description: The name of the database to create.
   QoveryServiceId:
@@ -26,14 +26,14 @@ Resources:
   MyDBInstance:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      DBInstanceIdentifier: !Sub "db-${QoveryServiceId}"
+      DBInstanceIdentifier: !Sub "db-${QoveryEnvironmentId}"
       AllocatedStorage: '20'
       DBInstanceClass: db.t3.micro
       Engine: postgres
       EngineVersion: '16.3'
       MasterUsername: !Sub "${MasterUsername}"
       MasterUserPassword: !Sub "${MasterPassword}"
-      DBName: !Sub "${DBName}"
+      DBName: !Sub "${DatabaseName}"
       VPCSecurityGroups:
         - sg-0ce325f4e2cdc72e7
         #iDBSnapshotIdentifier: my-snapshot-identifier
