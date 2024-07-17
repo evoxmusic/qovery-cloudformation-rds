@@ -18,9 +18,9 @@ Parameters:
   DatabaseName:
     Type: String
     Description: The name of the database to create.
-  QoveryServiceId:
+  QoveryEnvironmentId:
     Type: String
-    Description: The Qovery Service ID to be used in the DBInstanceIdentifier
+    Description: The Qovery Environment ID to be used in the DBInstanceIdentifier
 
 Resources:
   MyDBInstance:
