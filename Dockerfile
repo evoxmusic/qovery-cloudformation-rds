@@ -48,29 +48,23 @@ case "\$CMD" in
 start)
   echo 'start command invoked'
 
-  # Try to update the stack
-  UPDATE_OUTPUT=$(aws cloudformation update-stack --stack-name $STACK_NAME --template-body file:///data/$CF_TEMPLATE_PATH --parameters $PARAMETERS 2>&1)
+  # Check if the stack exists
+  STACK_EXISTS=\$(aws cloudformation describe-stacks --stack-name \$STACK_NAME 2>&1)
 
-  # Check if the update failed because the stack does not exist
-  if echo \$UPDATE_OUTPUT | grep -q "ValidationError"; then
-    if echo \$UPDATE_OUTPUT | grep -q "does not exist"; then
-      echo 'Stack does not exist. Creating a new stack...'
-      aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS --capabilities CAPABILITY_NAMED_IAM
-      # Wait until the stack creation is complete
-      aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
-    else
-      echo 'Update stack failed with error:'
-      echo \$UPDATE_OUTPUT
-      exit 1
-    fi
+  if echo "$STACK_EXISTS" | grep -q "does not exist"; then
+    echo 'Stack does not exist. Creating a new stack...'
+    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
+    # Wait until the stack creation is complete
+    aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
   else
-    echo 'Stack update initiated successfully.'
+    echo 'Stack exists. Updating the stack...'
+    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
     # Wait until the stack update is complete
     aws cloudformation wait stack-update-complete --stack-name \$STACK_NAME
   fi
 
   echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
-  aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
+  aws cloudformation describe-stacks --stack-name $STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
   jq '.[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": false } }' /data/output.json > /qovery-output/qovery-output.json
   ;;
 
