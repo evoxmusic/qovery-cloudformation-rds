@@ -25,15 +25,10 @@ USER app
 RUN cat <<EOF > entrypoint.sh
 #!/bin/sh
 
-if [ "\$JOB_INPUT" != '' ]
-then
-  PARAMETERS="file://\$JOB_INPUT"
-fi
-
 # if job input is a JSON and is not empty, then we can save it into a file input.json
-if [ "\$JOB_INPUT" != '' ]
+if [ "\JOB_INPUT_JSON" != '' ];
 then
-  echo "\$JOB_INPUT" > input.json
+  echo "\JOB_INPUT_JSON" > /data/input.json
   PARAMETERS="file:///data/input.json"
 fi
 
@@ -53,12 +48,22 @@ start)
 
   if echo "\$STACK_EXISTS" | grep -q "does not exist"; then
     echo 'Stack does not exist. Creating a new stack...'
-    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters file:///data/\$PARAMETERS
+    echo 'Creating stack with the following parameters:'
+    echo 'STACK_NAME: '\$STACK_NAME
+    echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
+    echo 'PARAMETERS: '\$PARAMETERS
+
+    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
     # Wait until the stack creation is complete
     aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
   else
     echo 'Stack exists. Updating the stack...'
-    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters file:///data/\$PARAMETERS
+    echo 'Updating stack with the following parameters:'
+    echo 'STACK_NAME: '\$STACK_NAME
+    echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
+    echo 'PARAMETERS: '\$PARAMETERS
+
+    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
     # Wait until the stack update is complete
     aws cloudformation wait stack-update-complete --stack-name \$STACK_NAME
   fi

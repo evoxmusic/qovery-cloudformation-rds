@@ -89,7 +89,7 @@ resource "qovery_job" "my_job" {
       value = var.AWS_SECRET_ACCESS_KEY
     },
     {
-      key = "JOB_INPUT"
+      key = "JOB_INPUT_JSON"
       value = templatefile("./cloudformation/input.json.tmpl", {
         qovery_environment_id = var.qovery_environment_id
         master_username       = var.MASTER_USERNAME
