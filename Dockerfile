@@ -47,9 +47,30 @@ STACK_NAME="qovery-stack-\${QOVERY_JOB_ID%%-*}"
 case "\$CMD" in
 start)
   echo 'start command invoked'
-  aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
-  echo 'generating stack output - injecting it as Qovery environment variable for downstream usage'
-  aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query ""Stacks[0].Outputs"" > /data/output.json
+
+  # Try to update the stack
+  UPDATE_OUTPUT=$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
+
+  # Check if the update failed because the stack does not exist
+  if echo \$UPDATE_OUTPUT | grep -q "ValidationError"; then
+    if echo \$UPDATE_OUTPUT | grep -q "does not exist"; then
+      echo 'Stack does not exist. Creating a new stack...'
+      aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS --capabilities CAPABILITY_NAMED_IAM
+      # Wait until the stack creation is complete
+      aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
+    else
+      echo 'Update stack failed with error:'
+      echo \$UPDATE_OUTPUT
+      exit 1
+    fi
+  else
+    echo 'Stack update initiated successfully.'
+    # Wait until the stack update is complete
+    aws cloudformation wait stack-update-complete --stack-name \$STACK_NAME
+  fi
+
+  echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
+  aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
   jq '.[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": false } }' /data/output.json > /qovery-output/qovery-output.json
   ;;
 

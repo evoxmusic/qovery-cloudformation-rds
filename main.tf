@@ -15,7 +15,7 @@ resource "qovery_job" "my_job" {
   name                 = "rds-test"
   cpu                  = 250
   memory               = 256
-  max_duration_seconds = 300
+  max_duration_seconds = 1800
   max_nb_restart       = 1
   auto_deploy          = true
   source = {
