@@ -51,7 +51,7 @@ start)
   # Check if the stack exists
   STACK_EXISTS=\$(aws cloudformation describe-stacks --stack-name \$STACK_NAME 2>&1)
 
-  if echo "$STACK_EXISTS" | grep -q "does not exist"; then
+  if echo "\$STACK_EXISTS" | grep -q "does not exist"; then
     echo 'Stack does not exist. Creating a new stack...'
     aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
     # Wait until the stack creation is complete
@@ -64,7 +64,7 @@ start)
   fi
 
   echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
-  aws cloudformation describe-stacks --stack-name $STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
+  aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
   jq '.[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": false } }' /data/output.json > /qovery-output/qovery-output.json
   ;;
 
