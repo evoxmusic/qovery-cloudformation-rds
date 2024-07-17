@@ -1,8 +1,18 @@
-{
-  "Parameters": {
-    "QoveryEnvironmentId": ${jsonencode(qovery_environment_id)},
-    "MasterUsername": ${jsonencode(master_username)},
-    "MasterPassword": ${jsonencode(master_password)},
-    "DatabaseName": ${jsonencode(database_name)},
+[
+  {
+    "ParameterKey": "QoveryEnvironmentId",
+    "ParameterValue": ${jsonencode(qovery_environment_id)}
+  },
+  {
+    "ParameterKey": "MasterUsername",
+    "ParameterValue": ${jsonencode(master_username)}
+  },
+  {
+    "ParameterKey": "MasterPassword",
+    "ParameterValue": ${jsonencode(master_password)}
+  },
+  {
+    "ParameterKey": "DatabaseName",
+    "ParameterValue": ${jsonencode(database_name)}
   }
-}
+]
