@@ -26,9 +26,9 @@ RUN cat <<EOF > entrypoint.sh
 #!/bin/sh
 
 # if job input is a JSON and is not empty, then we can save it into a file input.json
-if [ "\JOB_INPUT_JSON" != '' ];
+if [ "\$JOB_INPUT_JSON" != '' ];
 then
-  echo "\JOB_INPUT_JSON" > /data/input.json
+  echo "\$JOB_INPUT_JSON" > /data/input.json
   PARAMETERS="file:///data/input.json"
 fi
 
