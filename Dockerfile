@@ -53,12 +53,12 @@ start)
 
   if echo "\$STACK_EXISTS" | grep -q "does not exist"; then
     echo 'Stack does not exist. Creating a new stack...'
-    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
+    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters file:///data/\$PARAMETERS
     # Wait until the stack creation is complete
     aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
   else
     echo 'Stack exists. Updating the stack...'
-    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
+    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters file:///data/\$PARAMETERS
     # Wait until the stack update is complete
     aws cloudformation wait stack-update-complete --stack-name \$STACK_NAME
   fi
