@@ -80,7 +80,7 @@ resource "qovery_job" "my_job" {
     },
     {
       key   = "CF_TEMPLATE_NAME"
-      value = "cloudformation/cloudformation/main.yaml"
+      value = "/data/cloudformation/cloudformation/main.yaml"
     }
   ]
   secrets = [
