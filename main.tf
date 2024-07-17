@@ -79,8 +79,8 @@ resource "qovery_job" "my_job" {
       value = var.AWS_DEFAULT_REGION
     },
     {
-      key   = "CF_TEMPLATE_NAME"
-      value = "/data/cloudformation/cloudformation/main.yaml"
+      key   = "CF_TEMPLATE_PATH"
+      value = "cloudformation/cloudformation/main.yaml"
     }
   ]
   secrets = [
