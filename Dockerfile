@@ -43,8 +43,12 @@ case "\$CMD" in
 start)
   echo 'start command invoked'
 
+  # Temporarily disable exit on error
+  set +e
   # Check if the stack exists
   STACK_EXISTS=\$(aws cloudformation describe-stacks --stack-name \$STACK_NAME 2>&1)
+  # Re-enable exit on error
+  set -e
 
   if echo "\$STACK_EXISTS" | grep -q "does not exist"; then
     echo 'Stack does not exist. Creating a new stack...'
