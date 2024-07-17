@@ -47,7 +47,7 @@ STACK_NAME="qovery-stack-\${QOVERY_JOB_ID%%-*}"
 case "\$CMD" in
 start)
   echo 'start command invoked'
-  aws cloudformation update-stack --stack-name \$STACK_NAME --template-url file:///data/\$CF_TEMPLATE_URL --parameter-overrides \$PARAMETERS
+  aws cloudformation update-stack --stack-name \$STACK_NAME --template-url file:///data/\$CF_TEMPLATE_URL --parameters \$PARAMETERS
   echo 'generating stack output - injecting it as Qovery environment variable for downstream usage'
   aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query ""Stacks[0].Outputs"" > /data/output.json
   jq '.[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": false } }' /data/output.json > /qovery-output/qovery-output.json
