@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  MasterUsername:
+    Type: String
+    Description: The master username for the database.
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  MasterPassword:
+    Type: String
+    Description: The master user password for the database.
+    MinLength: 8
+    MaxLength: 41
+    NoEcho: true
+    AllowedPattern: "[a-zA-Z0-9]*"
+    ConstraintDescription: must contain only alphanumeric characters.
+  DBName:
+    Type: String
+    Description: The name of the database to create.
+  QoveryServiceId:
+    Type: String
+    Description: The Qovery Service ID to be used in the DBInstanceIdentifier
+
+Resources:
+  MyDBInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBInstanceIdentifier: !Sub "db-${QoveryServiceId}"
+      AllocatedStorage: '20'
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      EngineVersion: '16.3'
+      MasterUsername: !Sub "${MasterUsername}"
+      MasterUserPassword: !Sub "${MasterPassword}"
+      DBName: !Sub "${DBName}"
+      VPCSecurityGroups:
+        - sg-0ce325f4e2cdc72e7
+        #iDBSnapshotIdentifier: my-snapshot-identifier
+      MultiAZ: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 7
+      StorageType: gp3
+      StorageEncrypted: true
+      KmsKeyId: arn:aws:kms:us-east-2:687975725498:key/cbbc4341-519e-4386-a966-c2c75a84a937
+      Tags:
+        - Key: ttl
+          Value: 0
+
+Outputs:
+  DBInstanceEndpoint:
+    Description: The endpoint address of the RDS instance
+    Value: !GetAtt MyDBInstance.Endpoint.Address
+  DBInstancePort:
+    Description: The port number on which the DB instance is listening
+    Value: !GetAtt MyDBInstance.Endpoint.Port
+  DBInstanceIdentifier:
+    Description: The DB instance identifier
+    Value: !GetAtt MyDBInstance.DBInstanceIdentifier
+
