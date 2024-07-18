@@ -15,6 +15,11 @@ EOF
 WORKDIR /data
 USER app
 
+ARG QOVERY_ENVIRONMENT_ID
+ENV QOVERY_ENVIRONMENT_ID=$QOVERY_ENVIRONMENT_ID
+ARG QOVERY_JOB_ID
+ENV QOVERY_JOB_ID=$QOVERY_JOB_ID
+
 # Create the Python script to transform the output keys from CamelCase
 # to UPPER_CASE_WITH_UNDERSCORES in the Qovery format
 RUN cat <<EOF > transform_output.py
