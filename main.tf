@@ -28,32 +28,7 @@ resource "qovery_job" "my_job" {
       dockerfile_path = "Dockerfile"
     }
   }
-  healthchecks = {
-    readiness_probe = {
-      type = {
-        exec = {
-          command = ["sh", "-c", "echo 'ready'"]
-        }
-      }
-      initial_delay_seconds = 30
-      period_seconds        = 10
-      timeout_seconds       = 10
-      success_threshold     = 1
-      failure_threshold     = 3
-    }
-    liveness_probe = {
-      type = {
-        exec = {
-          command = ["sh", "-c", "echo 'ready'"]
-        }
-      }
-      initial_delay_seconds = 30
-      period_seconds        = 10
-      timeout_seconds       = 10
-      success_threshold     = 1
-      failure_threshold     = 3
-    }
-  }
+  healthchecks = {}
   schedule = {
     lifecycle_type = "CLOUDFORMATION"
     on_start = {
