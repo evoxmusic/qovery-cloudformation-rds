@@ -15,6 +15,53 @@ EOF
 WORKDIR /data
 USER app
 
+# Create the Python script to transform the output keys from CamelCase
+# to UPPER_CASE_WITH_UNDERSCORES in the Qovery format
+RUN cat <<EOF > transform_output.py
+import json
+import re
+import sys
+
+# Function to convert CamelCase to UPPER_CASE_WITH_UNDERSCORES
+def camel_to_upper_snake(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1)
+    return s2.upper()
+
+def transform(input_file, output_file):
+    # Read the JSON data from file
+    with open(input_file, 'r') as infile:
+        data = json.load(infile)
+
+    # Transform the keys
+    transformed_data = {}
+    for item in data:
+        key = camel_to_upper_snake(item['OutputKey'])
+        transformed_data[key] = {
+            'value': item['OutputValue'],
+            'type': 'string',
+            'sensitive': True
+        }
+
+    # Write the transformed data to a new file
+    with open(output_file, 'w') as outfile:
+        json.dump(transformed_data, outfile, indent=2)
+
+    print(f"Transformation complete. Check {output_file} for the result.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python transform_output.py <input_file> <output_file>")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+
+    transform(input_file, output_file)
+EOF
+
+RUN chmod +x transform_output.py
+
 # Create the entrypoint script with the commands to be run on the environment:
 # - start --> run "cloudformation deploy" + use "cloudformation describe-stacks" to generate the output to be fetched by Qovery and injected later as an environment variable for the other services within the same environment
 # - stop --> nothing
@@ -87,7 +134,8 @@ start)
 
   echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
   aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
-  jq -n '[inputs[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": true } }] | add' /data/output.json > /qovery-output/qovery-output.json
+  ehco 'Transforming the output keys to UPPER_CASE_WITH_UNDERSCORES in the Qovery format'
+  python transform_output.py /data/output.json /qovery-output/qovery-output.json
   ;;
 
 stop)
