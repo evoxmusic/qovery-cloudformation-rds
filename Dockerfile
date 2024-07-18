@@ -135,7 +135,7 @@ start)
   echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
   aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
   echo 'Transforming the output keys to UPPER_CASE_WITH_UNDERSCORES in the Qovery format'
-  python transform_output.py /data/output.json /qovery-output/qovery-output.json
+  python /data/transform_output.py /data/output.json /qovery-output/qovery-output.json
   ;;
 
 stop)
