@@ -51,13 +51,27 @@ Resources:
           Value: 0
 
 Outputs:
-  DBInstanceEndpoint:
+  DB_INSTANCE_ENDPOINT:
     Description: The endpoint address of the RDS instance
     Value: !GetAtt MyDBInstance.Endpoint.Address
-  DBInstancePort:
+  DB_INSTANCE_PORT:
     Description: The port number on which the DB instance is listening
     Value: !GetAtt MyDBInstance.Endpoint.Port
-  DBInstanceIdentifier:
+  DB_INSTANCE_IDENTIFIER:
     Description: The DB instance identifier
     Value: !GetAtt MyDBInstance.DBInstanceIdentifier
-
+  MASTER_USERNAME:
+    Description: The master username for the database
+    Value: !Ref MasterUsername
+  MASTER_PASSWORD:
+    Description: The master user password for the database
+    Value: !Ref MasterPassword
+  DATABASE_NAME:
+    Description: The name of the database
+    Value: !Ref DatabaseName
+  VPC_SECURITY_GROUP_ID:
+    Description: The VPC security group ID
+    Value: !Ref VPCSecurityGroupId
+  DATABASE_URL:
+    Description: The URL of the database
+    Value: !Sub "postgresql://${MasterUsername}:${MasterPassword}@${MyDBInstance.Endpoint.Address}:${MyDBInstance.Endpoint.Port}/${DatabaseName}"
