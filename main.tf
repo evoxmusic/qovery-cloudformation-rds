@@ -56,6 +56,10 @@ resource "qovery_job" "my_job" {
     {
       key   = "CF_TEMPLATE_PATH"
       value = "cloudformation/cloudformation/main.yaml"
+    },
+    {
+      key   = "VPC_SECURITY_GROUP_ID"
+      value = var.VPC_SECURITY_GROUP_ID
     }
   ]
   secrets = [

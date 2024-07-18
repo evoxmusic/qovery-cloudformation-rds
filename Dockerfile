@@ -74,7 +74,7 @@ start)
 
   echo 'Generating stack output - injecting it as Qovery environment variable for downstream usage'
   aws cloudformation describe-stacks --stack-name \$STACK_NAME --output json --query "Stacks[0].Outputs" > /data/output.json
-  jq '.[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": false } }' /data/output.json > /qovery-output/qovery-output.json
+  jq -n '[inputs[] | { (.OutputKey): { "value": .OutputValue, "type" : "string", "sensitive": true } }] | add' /data/output.json > /qovery-output/qovery-output.json
   ;;
 
 stop)
