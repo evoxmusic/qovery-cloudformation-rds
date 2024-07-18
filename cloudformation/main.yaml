@@ -18,9 +18,9 @@ Parameters:
   DatabaseName:
     Type: String
     Description: The name of the database to create.
-  QoveryEnvironmentId:
+  QoveryJobId:
     Type: String
-    Description: The Qovery Environment ID to be used in the DBInstanceIdentifier
+    Description: The Qovery Job ID to be used in the DBInstanceIdentifier
   VPCSecurityGroupId:
     Type: String
     Description: The VPC security group to associate with the RDS instance
@@ -29,7 +29,7 @@ Resources:
   MyDBInstance:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      DBInstanceIdentifier: !Sub "db-${QoveryEnvironmentId}"
+      DBInstanceIdentifier: !Sub "db-${QoveryJobId}"
       AllocatedStorage: '20'
       DBInstanceClass: db.t3.micro
       Engine: postgres

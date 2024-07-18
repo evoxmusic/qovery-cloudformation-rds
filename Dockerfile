@@ -15,8 +15,6 @@ EOF
 WORKDIR /data
 USER app
 
-ARG QOVERY_ENVIRONMENT_ID
-ENV QOVERY_ENVIRONMENT_ID=$QOVERY_ENVIRONMENT_ID
 ARG QOVERY_JOB_ID
 ENV QOVERY_JOB_ID=$QOVERY_JOB_ID
 
@@ -81,6 +79,8 @@ RUN cat <<EOF > entrypoint.sh
 if [ "\$JOB_INPUT_JSON" != '' ];
 then
   echo "\$JOB_INPUT_JSON" > /data/input.json
+  # Sed QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE with the actual QOVERY_JOB_ID
+  sed -i "s/QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE/\$QOVERY_JOB_ID/g" /data/input.json
   PARAMETERS="file:///data/input.json"
 fi
 
@@ -90,13 +90,6 @@ set -ex
 cd cloudformation
 
 STACK_NAME="qovery-stack-\${QOVERY_JOB_ID%%-*}"
-
-echo 'Variables:'
-echo 'STACK_NAME: '\$STACK_NAME
-echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
-echo 'PARAMETERS: '\$PARAMETERS
-echo 'QOVERY_ENVIRONMENT_ID: '\$QOVERY_ENVIRONMENT_ID
-echo 'QOVERY_JOB_ID: '\$QOVERY_JOB_ID
 
 case "\$CMD" in
 start)
@@ -113,7 +106,7 @@ start)
     echo 'Stack does not exist. Creating a new stack...'
     echo 'Creating stack with the following parameters:'
 
-    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters ParameterKey=QoveryEnvironmentId,ParameterValue=\$QOVERY_ENVIRONMENT_ID --parameters \$PARAMETERS
+    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
     # Wait until the stack creation is complete
     aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
   else
@@ -122,7 +115,7 @@ start)
 
     # Temporarily disable exit on error
     set +e
-    UPDATE_OUTPUT=\$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters ParameterKey=QoveryEnvironmentId,ParameterValue=\$QOVERY_ENVIRONMENT_ID --parameters \$PARAMETERS 2>&1)
+    UPDATE_OUTPUT=\$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
     # Re-enable exit on error
     set -e
 
