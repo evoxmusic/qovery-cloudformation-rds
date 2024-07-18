@@ -67,7 +67,20 @@ start)
     echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
     echo 'PARAMETERS: '\$PARAMETERS
 
-    aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
+    # Temporarily disable exit on error
+    set +e
+    UPDATE_OUTPUT=\$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
+    # Re-enable exit on error
+    set -e
+
+    if echo "\$UPDATE_OUTPUT" | grep -q "No updates are to be performed"; then
+      echo 'No updates are to be performed. Skipping...'
+    else
+      echo 'Update stack failed with error:'
+      echo "\$UPDATE_OUTPUT"
+      exit 1
+    fi
+
     # Wait until the stack update is complete
     aws cloudformation wait stack-update-complete --stack-name \$STACK_NAME
   fi
