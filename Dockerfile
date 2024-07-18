@@ -91,6 +91,13 @@ cd cloudformation
 
 STACK_NAME="qovery-stack-\${QOVERY_JOB_ID%%-*}"
 
+echo 'Variables:'
+echo 'STACK_NAME: '\$STACK_NAME
+echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
+echo 'PARAMETERS: '\$PARAMETERS
+echo 'QOVERY_ENVIRONMENT_ID: '\$QOVERY_ENVIRONMENT_ID
+echo 'QOVERY_JOB_ID: '\$QOVERY_JOB_ID
+
 case "\$CMD" in
 start)
   echo 'start command invoked'
@@ -105,9 +112,6 @@ start)
   if echo "\$STACK_EXISTS" | grep -q "does not exist"; then
     echo 'Stack does not exist. Creating a new stack...'
     echo 'Creating stack with the following parameters:'
-    echo 'STACK_NAME: '\$STACK_NAME
-    echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
-    echo 'PARAMETERS: '\$PARAMETERS
 
     aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters ParameterKey=QoveryEnvironmentId,ParameterValue=\$QOVERY_ENVIRONMENT_ID --parameters \$PARAMETERS
     # Wait until the stack creation is complete
@@ -115,9 +119,6 @@ start)
   else
     echo 'Stack exists. Updating the stack...'
     echo 'Updating stack with the following parameters:'
-    echo 'STACK_NAME: '\$STACK_NAME
-    echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
-    echo 'PARAMETERS: '\$PARAMETERS
 
     # Temporarily disable exit on error
     set +e
