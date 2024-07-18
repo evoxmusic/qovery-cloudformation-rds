@@ -95,6 +95,7 @@ resource "qovery_job" "my_job" {
         master_username       = var.MASTER_USERNAME
         master_password       = var.MASTER_PASSWORD
         database_name         = var.DATABASE_NAME
+        vpc_security_group_id = var.VPC_SECURITY_GROUP_ID
       })
     }
   ]

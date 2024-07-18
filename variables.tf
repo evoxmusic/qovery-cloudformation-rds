@@ -8,6 +8,11 @@ variable "qovery_environment_id" {
   type        = string
 }
 
+variable "VPC_SECURITY_GROUP_ID" {
+    description = "RDS VPC Security Group ID"
+    type        = string
+}
+
 variable "AWS_ACCESS_KEY_ID" {
   description = "AWS Access Key ID for Cloudformation and the create resources"
   type        = string

@@ -21,6 +21,9 @@ Parameters:
   QoveryEnvironmentId:
     Type: String
     Description: The Qovery Environment ID to be used in the DBInstanceIdentifier
+  VPCSecurityGroupId:
+    Type: String
+    Description: The VPC security group to associate with the RDS instance
 
 Resources:
   MyDBInstance:
@@ -36,7 +39,7 @@ Resources:
       DBName: !Sub "${DatabaseName}"
       #iDBSnapshotIdentifier: my-snapshot-identifier
       VPCSecurityGroups:
-        - sg-0ce325f4e2cdc72e7
+        - !Sub "${VPCSecurityGroupId}"
       MultiAZ: false
       PubliclyAccessible: false
       BackupRetentionPeriod: 7

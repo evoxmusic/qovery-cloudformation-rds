@@ -19,20 +19,23 @@ Note: The Terraform here is only responsible for creating the Qovery Lifecycle J
 ## How to deploy
 
 1. Clone this repository
+    1. Adapt the [main.yaml](cloudformation/main.yaml) file to your needs. You can change the instance class, storage size, encryption, etc.
 2. Run `terraform init`
 3. Set the [following environment variables](variables.tf):
     1. `TF_VAR_qovery_api_token` - Your Qovery API token
     2. `TF_VAR_qovery_environment_id` - Your Qovery environment ID where you want to deploy the RDS instance
-    3. `TF_VAR_AWS_ACCESS_KEY_ID` - Your AWS access key ID for Cloudformation
-    4. `TF_VAR_AWS_SECRET_ACCESS_KEY` - Your AWS secret access key for Cloudformation
-    5. `TF_VAR_AWS_DEFAULT_REGION` - The AWS region to deploy the RDS instance
-    6. `TF_MASTER_USERNAME` - The master username for the RDS instance
-    7. `TF_MASTER_PASSWORD` - The master password for the RDS instance
-    8. `TF_DATABASE_NAME` - The database name for the RDS instance
+    3. `TF_VAR_VPC_SECURITY_GROUP_ID` - The VPC security group ID for the RDS instance
+    4. `TF_VAR_AWS_ACCESS_KEY_ID` - Your AWS access key ID for Cloudformation
+    5. `TF_VAR_AWS_SECRET_ACCESS_KEY` - Your AWS secret access key for Cloudformation
+    6. `TF_VAR_AWS_DEFAULT_REGION` - The AWS region to deploy the RDS instance
+    7. `TF_MASTER_USERNAME` - The master username for the RDS instance
+    8. `TF_MASTER_PASSWORD` - The master password for the RDS instance
+    9. `TF_DATABASE_NAME` - The database name for the RDS instance
 
 ```bash
 export TF_VAR_qovery_api_token="your_qovery_api_token" \
 TF_VAR_qovery_environment_id="your_qovery_environment_id" \
+TF_VAR_VPC_SECURITY_GROUP_ID="your_vpc_security_group_id" \
 TF_VAR_AWS_ACCESS_KEY_ID="your_aws_access_key_id" \
 TF_VAR_AWS_SECRET_ACCESS_KEY="your_aws_secret_access_key" \
 TF_VAR_AWS_DEFAULT_REGION="your_aws_default_region" \
