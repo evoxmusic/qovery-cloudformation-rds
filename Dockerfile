@@ -77,7 +77,7 @@ if [ "\$JOB_INPUT_JSON" != '' ];
 then
   echo "\$JOB_INPUT_JSON" > /data/input.json
   # Sed QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE with the actual QOVERY_JOB_ID
-  sed -i "s/QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE/\\$QOVERY_JOB_ID/g" /data/input.json
+  sed -i "s/QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE/\\\$QOVERY_JOB_ID/g" /data/input.json
   PARAMETERS="file:///data/input.json"
 fi
 
