@@ -15,9 +15,6 @@ EOF
 WORKDIR /data
 USER app
 
-ARG QOVERY_JOB_ID
-ENV QOVERY_JOB_ID=$QOVERY_JOB_ID
-
 # Create the Python script to transform the output keys from CamelCase
 # to UPPER_CASE_WITH_UNDERSCORES in the Qovery format
 RUN cat <<EOF > transform_output.py
@@ -80,7 +77,7 @@ if [ "\$JOB_INPUT_JSON" != '' ];
 then
   echo "\$JOB_INPUT_JSON" > /data/input.json
   # Sed QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE with the actual QOVERY_JOB_ID
-  sed -i "s/QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE/\$QOVERY_JOB_ID/g" /data/input.json
+  sed -i "s/QOVERY_JOB_ID_DO_NOT_CHANGE_THIS_VALUE/\\$QOVERY_JOB_ID/g" /data/input.json
   PARAMETERS="file:///data/input.json"
 fi
 
