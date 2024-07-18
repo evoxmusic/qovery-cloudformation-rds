@@ -70,7 +70,6 @@ resource "qovery_job" "my_job" {
     {
       key = "JOB_INPUT_JSON"
       value = templatefile("./cloudformation/input.json.tmpl", {
-        qovery_environment_id = var.qovery_environment_id
         master_username       = var.MASTER_USERNAME
         master_password       = var.MASTER_PASSWORD
         database_name         = var.DATABASE_NAME

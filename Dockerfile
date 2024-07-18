@@ -104,7 +104,7 @@ start)
     echo 'CF_TEMPLATE_PATH: '\$CF_TEMPLATE_PATH
     echo 'PARAMETERS: '\$PARAMETERS
 
-    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS
+    aws cloudformation create-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters ParameterKey=QoveryEnvironmentId,ParameterValue=\$QOVERY_ENVIRONMENT_ID --parameters \$PARAMETERS
     # Wait until the stack creation is complete
     aws cloudformation wait stack-create-complete --stack-name \$STACK_NAME
   else
@@ -116,7 +116,7 @@ start)
 
     # Temporarily disable exit on error
     set +e
-    UPDATE_OUTPUT=\$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters \$PARAMETERS 2>&1)
+    UPDATE_OUTPUT=\$(aws cloudformation update-stack --stack-name \$STACK_NAME --template-body file:///data/\$CF_TEMPLATE_PATH --parameters ParameterKey=QoveryEnvironmentId,ParameterValue=\$QOVERY_ENVIRONMENT_ID --parameters \$PARAMETERS 2>&1)
     # Re-enable exit on error
     set -e
 
