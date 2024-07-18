@@ -12,7 +12,7 @@ provider "qovery" {
 
 resource "qovery_job" "my_job" {
   environment_id       = var.qovery_environment_id
-  name                 = "rds-test"
+  name                 = "RDS Postgres"
   cpu                  = 250
   memory               = 256
   max_duration_seconds = 1800

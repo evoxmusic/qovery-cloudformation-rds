@@ -3,18 +3,8 @@ variable "qovery_access_token" {
   type        = string
 }
 
-variable "qovery_organization_id" {
-  description = "Qovery Organization ID"
-  type        = string
-}
-
-variable "qovery_cluster_id" {
-  description = "My Qovery Test Cluster ID"
-  type        = string
-}
-
 variable "qovery_environment_id" {
-  description = "Qovery Environment ID"
+  description = "Qovery Environment ID where you will deploy the job"
   type        = string
 }
 

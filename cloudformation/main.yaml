@@ -34,15 +34,15 @@ Resources:
       MasterUsername: !Sub "${MasterUsername}"
       MasterUserPassword: !Sub "${MasterPassword}"
       DBName: !Sub "${DatabaseName}"
+      #iDBSnapshotIdentifier: my-snapshot-identifier
       VPCSecurityGroups:
         - sg-0ce325f4e2cdc72e7
-        #iDBSnapshotIdentifier: my-snapshot-identifier
       MultiAZ: false
       PubliclyAccessible: false
       BackupRetentionPeriod: 7
       StorageType: gp3
-      StorageEncrypted: true
-      KmsKeyId: arn:aws:kms:us-east-2:687975725498:key/cbbc4341-519e-4386-a966-c2c75a84a937
+      #StorageEncrypted: true
+      #KmsKeyId: put-your-kms-arn-key-here
       Tags:
         - Key: ttl
           Value: 0
